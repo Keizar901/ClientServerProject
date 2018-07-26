@@ -40,7 +40,7 @@ namespace Server
 
             Console.WriteLine("Connected.");
             serverSocket.BeginAccept(new AsyncCallback(acceptCallBack), null);
-          
+
         }
 
         private static void recieveCallBack(IAsyncResult AR)
@@ -54,23 +54,25 @@ namespace Server
             Console.WriteLine("Recieved Data " + text);
             bool intCheck = true;
 
+            //splits data
             string[] recievedData = text.Split(' ');
             int[] values = new int[recievedData.Length];
 
+            //puts data into array, checks for non integers
             for (int i = 0; i < values.Length; i++)
             {
                 int check;
                 if(int.TryParse(recievedData[i], out check)){
                     values[i] = Convert.ToInt32(recievedData[i]);
                 }else{
-
                    intCheck = false;
-
                 }
 
             }
 
             quickSort(values, 0, values.Length - 1);
+
+            //set response based on valid input
             string response;
             if(intCheck){
                 response = string.Join(" ", values);
@@ -78,8 +80,8 @@ namespace Server
             }else{
                 response = "Please input valid numbers";
             }
-            
-            
+
+
             byte[] retData = Encoding.ASCII.GetBytes(response);
             socket.BeginSend(retData, 0, retData.Length, SocketFlags.None, new AsyncCallback(sendCallBack), socket);
             socket.BeginReceive(buf, 0, buf.Length, SocketFlags.None, new AsyncCallback(recieveCallBack), socket);
@@ -104,12 +106,10 @@ namespace Server
                 while (arr[i] < pivot)
                 {
                     i++;
-
                 }
                 while (arr[j] > pivot)
                 {
                     j--;
-
                 }
 
                 if (i <= j)
@@ -119,24 +119,16 @@ namespace Server
                     arr[j] = tmp;
                     i++;
                     j--;
-
                 }
-
-
-
             }
 
             if (left < j)
             {
                 quickSort(arr, left, j);
-
-
             }
             if (right > i)
             {
                 quickSort(arr, i, right);
-
-
             }
 
         }
